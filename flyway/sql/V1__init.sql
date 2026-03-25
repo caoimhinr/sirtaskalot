@@ -1,0 +1,46 @@
+CREATE TABLE IF NOT EXISTS "User" (
+  id TEXT PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  name TEXT,
+  image TEXT,
+  "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS "Account" (
+  id TEXT PRIMARY KEY,
+  "userId" TEXT NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
+  provider TEXT NOT NULL,
+  "providerAccountId" TEXT NOT NULL,
+  access_token TEXT,
+  refresh_token TEXT,
+  expires_at INTEGER,
+  token_type TEXT,
+  scope TEXT,
+  id_token TEXT,
+  session_state TEXT,
+  UNIQUE(provider, "providerAccountId")
+);
+
+CREATE TABLE IF NOT EXISTS "Task" (
+  id TEXT PRIMARY KEY,
+  "userId" TEXT NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  icon TEXT NOT NULL,
+  description TEXT NOT NULL,
+  date TIMESTAMP NOT NULL,
+  "allDay" BOOLEAN NOT NULL DEFAULT FALSE,
+  "startTime" TEXT,
+  "endTime" TEXT,
+  "completionFields" JSONB NOT NULL,
+  "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS "TaskCompletion" (
+  id TEXT PRIMARY KEY,
+  "taskId" TEXT NOT NULL REFERENCES "Task"(id) ON DELETE CASCADE,
+  "userId" TEXT NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
+  payload JSONB NOT NULL,
+  "completedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

@@ -1,0 +1,53 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@app-db:5432/sirtaskalot
+      TELEMETRY_DATABASE_URL: postgresql://postgres:postgres@telemetry-db:5432/telemetry
+      REDIS_URL: redis://redis:6379
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318/v1/traces
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: development-secret
+    depends_on:
+      - app-db
+      - telemetry-db
+      - redis
+      - jaeger
+      - flyway
+  app-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: sirtaskalot
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5433:5432'
+  telemetry-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: telemetry
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5434:5432'
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
+  jaeger:
+    image: jaegertracing/all-in-one:1.59
+    ports:
+      - '16686:16686'
+      - '4318:4318'
+  flyway:
+    image: flyway/flyway:10.17
+    command: -configFiles=/flyway/conf/flyway.conf migrate
+    volumes:
+      - ./flyway/sql:/flyway/sql
+      - ./flyway/conf:/flyway/conf
+    depends_on:
+      - app-db

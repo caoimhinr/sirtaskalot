@@ -1,0 +1,16 @@
+{
+  "name": "@sirtaskalot/mcp",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "node --loader ts-node/esm --test src/index.test.js"
+  },
+  "dependencies": {
+    "@sirtaskalot/shared": "0.1.0"
+  },
+  "devDependencies": {
+    "ts-node": "10.9.2"
+  }
+}
