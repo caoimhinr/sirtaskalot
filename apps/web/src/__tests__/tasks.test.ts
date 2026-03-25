@@ -5,7 +5,7 @@ describe('task service', () => {
 
   it('returns tasks for a date', async () => {
     const tasks = await getTasksForDate('2026-03-16');
-    expect(tasks).toHaveLength(2);
+    expect(tasks).toHaveLength(3);
     expect(tasks[0]?.name).toBe('Morning meds');
   });
 

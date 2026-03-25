@@ -8,6 +8,8 @@ export const taskCompletionFieldSchema = z.object({
   options: z.array(z.string()).optional(),
 });
 
+export const taskStatusSchema = z.enum(['default', 'completed', 'abandoned']);
+
 export const taskSchema = z.object({
   id: z.string(),
   name: z.string().min(1),
@@ -19,6 +21,7 @@ export const taskSchema = z.object({
   endTime: z.string().nullable(),
   completionFields: z.array(taskCompletionFieldSchema).default([]),
   completed: z.boolean().default(false),
+  status: taskStatusSchema.default('default'),
 });
 
 export const taskCompletionSubmissionSchema = z.object({
@@ -29,6 +32,7 @@ export const taskCompletionSubmissionSchema = z.object({
 export type Task = z.infer<typeof taskSchema>;
 export type TaskCompletionField = z.infer<typeof taskCompletionFieldSchema>;
 export type TaskCompletionSubmission = z.infer<typeof taskCompletionSubmissionSchema>;
+export type TaskStatus = z.infer<typeof taskStatusSchema>;
 
 export const demoTasks: Task[] = [
   {
@@ -41,9 +45,21 @@ export const demoTasks: Task[] = [
     startTime: '08:00',
     endTime: '08:15',
     completed: false,
-    completionFields: [
-      { id: 'bp', label: 'Blood pressure', type: 'number', required: true },
-    ],
+    status: 'default',
+    completionFields: [{ id: 'bp', label: 'Blood pressure', type: 'number', required: true }],
+  },
+  {
+    id: '3',
+    name: 'Breakfast prep',
+    icon: '🍳',
+    description: 'Prepare oatmeal and tea before work.',
+    date: '2026-03-16',
+    allDay: false,
+    startTime: '08:05',
+    endTime: '08:35',
+    completed: false,
+    status: 'default',
+    completionFields: [],
   },
   {
     id: '2',
@@ -55,6 +71,7 @@ export const demoTasks: Task[] = [
     startTime: null,
     endTime: null,
     completed: true,
+    status: 'completed',
     completionFields: [
       { id: 'mood', label: 'Dog mood', type: 'select', required: false, options: ['Happy', 'Sleepy', 'Zoomies'] },
     ],

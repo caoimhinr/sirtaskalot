@@ -5,7 +5,7 @@ describe('API routes', () => {
   it('returns tasks for the requested date', async () => {
     const response = await getTasks(new Request('http://localhost/api/tasks?date=2026-03-16'));
     const body = await response.json();
-    expect(body.tasks).toHaveLength(2);
+    expect(body.tasks).toHaveLength(3);
   });
 
   it('creates a completion payload', async () => {
